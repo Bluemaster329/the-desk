@@ -447,6 +447,26 @@ h1 em{text-shadow:0 0 22px rgba(212,175,106,.18);animation:goldpulse 5s ease-in-
   border-radius:99px;background:rgba(46,230,168,.07);white-space:nowrap}
 .aoff{font-size:10px;color:var(--muted);letter-spacing:.05em;opacity:.7}
 
+/* ============ privacy policy modal ============ */
+.ppmodal{position:fixed;inset:0;z-index:300;background:rgba(8,10,9,.88);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .28s}
+.ppmodal.open{opacity:1;pointer-events:auto}
+.ppbox{background:var(--panel2);border:1px solid var(--line);border-radius:12px;max-width:560px;width:calc(100% - 40px);max-height:80vh;overflow-y:auto;padding:32px 30px 28px;position:relative;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+.ppbox h2{font-family:var(--serif);font-size:20px;color:var(--gold);margin:0 0 4px}
+.ppdate{font-size:10.5px;color:var(--muted);letter-spacing:.05em;margin-bottom:22px!important}
+.ppbox h3{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin:20px 0 6px}
+.ppbox p,.ppbox li{font-size:13px;color:var(--muted);line-height:1.65;margin:0 0 6px}
+.ppbox ul{padding-left:18px;margin:0 0 8px}
+.ppbox li{margin:0 0 4px}
+.ppbox b{color:var(--cream)}
+.ppbox i{color:var(--cream);font-style:italic}
+.ppclose{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1;padding:4px 8px;border-radius:6px;transition:color .2s}
+.ppclose:hover{color:var(--cream)}
+.pplink{background:none;border:none;color:var(--gold-dim);font-size:10.5px;cursor:pointer;text-decoration:underline;padding:0;font-family:var(--mono);letter-spacing:.03em}
+.pplink:hover{color:var(--gold)}
+.agegate{display:flex;align-items:center;gap:7px;font-size:10.5px;color:var(--muted);letter-spacing:.03em;margin-bottom:7px;cursor:pointer;user-select:none}
+.agegate input[type=checkbox]{width:13px;height:13px;accent-color:var(--green);cursor:pointer;flex-shrink:0}
+.achip:disabled{opacity:.4;cursor:not-allowed;transform:none!important;box-shadow:none}
+
 /* ============ v6.2 — animated inline-SVG lesson visuals (dual coding) ============ */
 .vizwrap{display:flex;justify-content:center;margin:2px 0 20px}
 .viz{width:148px;height:auto;max-width:100%;filter:drop-shadow(0 8px 18px rgba(0,0,0,.45))}
@@ -570,9 +590,42 @@ h1 em{text-shadow:0 0 22px rgba(212,175,106,.18);animation:goldpulse 5s ease-in-
 
 <footer id="footer">
   <b>Source trust notes —</b> Damodaran is an NYU Stern professor and the standard valuation authority; his full courses are free on his NYU site and YouTube. CFI and Wall Street Prep publish free explainers as marketing for paid courses — the free material is high quality, just ignore the upsell. Mergers &amp; Inquisitions is the longest-running free IB careers resource. Khan Academy is fully free and non-profit. rareliquid (ex-JPMorgan) and Kenji Explains are practitioner channels — entertaining, accurate at the foundations level. Nothing on this page requires payment.
+  <div style="margin-top:12px;font-size:11px;color:var(--muted);opacity:.7">For personal educational use only · <button class="pplink" onclick="showPrivacy()">Privacy Policy</button></div>
 </footer>
 
 <div class="authchip" id="authchip"></div>
+
+<div class="ppmodal" id="ppmodal" role="dialog" aria-modal="true" aria-label="Privacy Policy">
+ <div class="ppbox">
+  <button class="ppclose" id="ppclose" aria-label="Close">×</button>
+  <h2>Privacy Policy</h2>
+  <p class="ppdate">Effective 29 June 2026 · The Desk</p>
+  <h3>Who we are</h3>
+  <p>The Desk is a study tool operated by Jaehee Jin. Contact: <b>jaeheejin10@gmail.com</b></p>
+  <h3>What we collect</h3>
+  <p>If you choose to sign in with Google, we receive your <b>name, email address</b>, and profile photo from Google. If you use the app without signing in, we collect nothing — progress is stored locally on your device only.</p>
+  <h3>Why we collect it</h3>
+  <p>Solely to sync your study progress across devices. Your name is displayed in the app; your email identifies your account.</p>
+  <h3>What we do not collect</h3>
+  <ul>
+   <li>Passwords — Google handles all authentication</li>
+   <li>Financial data, location, contacts, or browsing history</li>
+   <li>Any data from users who do not sign in</li>
+  </ul>
+  <h3>Where data is stored</h3>
+  <p>Signed-in progress is stored on <b>Supabase</b> (supabase.co), which runs on AWS infrastructure. Access is restricted by database-level row-level security — only your own account can read or write your data.</p>
+  <h3>Sharing</h3>
+  <p>We do not sell, rent, or share your personal data with any third party.</p>
+  <h3>Age requirement</h3>
+  <p>You must be <b>13 or older</b> to create an account. We do not knowingly collect personal information from anyone under 13. If you believe an under-13 account exists, contact us and we will delete it promptly.</p>
+  <h3>Deleting your data</h3>
+  <p>To delete your account and all associated data, email <b>jaeheejin10@gmail.com</b> with the subject "Delete my data". We will process it within 30 days.</p>
+  <h3>Australian Privacy Act</h3>
+  <p>This policy is intended to comply with the <i>Privacy Act 1988</i> (Cth) and the Australian Privacy Principles (APPs).</p>
+  <h3>Changes</h3>
+  <p>If this policy changes materially, we will update the effective date above and display a notice in the app.</p>
+ </div>
+</div>
 
 <div class="lesson" id="lesson">
   <div class="lhead">
@@ -2323,14 +2376,24 @@ async function signInGoogle(){ if(!sb){toast('Open the app from a web address (n
  try{ await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.href.split('#')[0]}}); }
  catch(e){ toast('Sign-in unavailable here.'); } }
 async function signOutSb(){ try{ if(sb)await sb.auth.signOut(); }catch(e){} location.reload(); }
+function showPrivacy(){
+ const m=document.getElementById('ppmodal'); if(!m)return;
+ m.classList.add('open');
+ const cl=document.getElementById('ppclose'); if(cl)cl.onclick=()=>m.classList.remove('open');
+ m.onclick=e=>{if(e.target===m)m.classList.remove('open');}; }
 function renderAuth(){
  const el=document.getElementById('authchip'); if(!el)return;
  if(!sb){ el.innerHTML='<span class="aoff">offline mode</span>'; return; }
  if(sbUser){ const nm=(sbUser.user_metadata&&(sbUser.user_metadata.full_name||sbUser.user_metadata.name))||sbUser.email||'you';
    el.innerHTML='<span class="aname">☁ '+esc(String(nm).split(' ')[0])+' · synced</span><button class="achip" id="signoutb">Sign out</button>';
    const b=document.getElementById('signoutb'); if(b)b.onclick=signOutSb;
- }else{ el.innerHTML='<button class="achip gbtn" id="signinb"><span>G</span> Continue with Google</button>';
-   const b=document.getElementById('signinb'); if(b)b.onclick=signInGoogle; } }
+ }else{
+   el.innerHTML='<div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px">'
+    +'<label class="agegate"><input type="checkbox" id="agecb"> I confirm I am 13 or older &nbsp;·&nbsp; <button class="pplink" onclick="showPrivacy()">Privacy Policy</button></label>'
+    +'<button class="achip gbtn" id="signinb" disabled><span>G</span> Continue with Google</button>'
+    +'</div>';
+   const cb=document.getElementById('agecb'),b=document.getElementById('signinb');
+   if(cb&&b){ cb.onchange=()=>{b.disabled=!cb.checked;}; b.onclick=signInGoogle; } } }
 /* ---------- Supabase content sync ---------- */
 /* fetchContent: on boot, pull content blobs from tracks table and merge into TRACKS.
    Falls back silently to embedded constants if Supabase is unavailable. */
