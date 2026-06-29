@@ -590,7 +590,6 @@ h1 em{text-shadow:0 0 22px rgba(212,175,106,.18);animation:goldpulse 5s ease-in-
 
 <footer id="footer">
   <b>Source trust notes —</b> Damodaran is an NYU Stern professor and the standard valuation authority; his full courses are free on his NYU site and YouTube. CFI and Wall Street Prep publish free explainers as marketing for paid courses — the free material is high quality, just ignore the upsell. Mergers &amp; Inquisitions is the longest-running free IB careers resource. Khan Academy is fully free and non-profit. rareliquid (ex-JPMorgan) and Kenji Explains are practitioner channels — entertaining, accurate at the foundations level. Nothing on this page requires payment.
-  <div style="margin-top:12px;font-size:11px;color:var(--muted);opacity:.7">For personal educational use only · <button class="pplink" onclick="showPrivacy()">Privacy Policy</button></div>
 </footer>
 
 <div class="authchip" id="authchip"></div>
@@ -2146,7 +2145,7 @@ function applyMeta(){const m=META||{};
  const k=document.getElementById('herokick'); if(k)k.textContent=m.kick||'';
  const t=document.getElementById('herotitle'); if(t)t.innerHTML=m.title||'The <em>Desk.</em>';
  const s=document.getElementById('herosub'); if(s)s.innerHTML=m.sub||'';
- const f=document.getElementById('footer'); if(f)f.innerHTML=m.footer||'';
+ const f=document.getElementById('footer'); if(f)f.innerHTML=(m.footer||'')+'<div style="margin-top:12px;font-size:11px;color:var(--muted);opacity:.6">For personal educational use only · <button class="pplink" onclick="showPrivacy()">Privacy Policy</button></div>';
  const tc=document.getElementById('totconcepts'); if(tc)tc.textContent=TIERS.reduce((a,x)=>a+x.concepts.length,0);
  const tt=document.getElementById('tottiers'); if(tt)tt.textContent=TIERS.length;
  document.body.dataset.track=CURTRACK;}
