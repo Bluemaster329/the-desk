@@ -2369,9 +2369,23 @@ async function seedContent(){
 
 async function initAuth(){
  if(!sb)return;
- try{ const {data}=await sb.auth.getSession(); sbUser=data&&data.session?data.session.user:null; }catch(e){}
+ /* Wait for Supabase to resolve the initial auth state — this handles the PKCE code exchange
+    that happens after Google OAuth redirect before getSession() would return a value. */
+ await new Promise(resolve=>{
+  const {data:{subscription}}=sb.auth.onAuthStateChange((event,session)=>{
+   if(event==='INITIAL_SESSION'||event==='SIGNED_IN'){
+    sbUser=session?session.user:null;
+    subscription.unsubscribe();resolve();
+   }
+  });
+ });
  if(sbUser){ const had=await cloudPull(); if(!had)await cloudPushNow(); }
- sb.auth.onAuthStateChange((_e,session)=>{ const u=session?session.user:null; if((!!u)!==(!!sbUser)){ sbUser=u; location.reload(); } }); }
+ /* Ongoing listener: update UI on sign-in/sign-out without a full reload */
+ sb.auth.onAuthStateChange(async(_e,session)=>{
+  const u=session?session.user:null;
+  if((!!u)!==(!!sbUser)){ sbUser=u; if(u)await cloudPull(); renderAuth(); }
+ });
+}
 
 (async()=>{
  await detect();showSaveState();
